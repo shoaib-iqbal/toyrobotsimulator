@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Toy Robot Simulator</title>
+  <%= stylesheet_link_tag 'simulator' %>
+</head>
+<body>
+  <div class="container">
+    <h1>Toy Robot Simulator</h1>
+    <div class="commands">
+      <label for="command">Enter location and action:</label>
+      <input type="text" id="location" placeholder="place,move,right,left,repot"/>
+      <input type="text" id="command" placeholder="place command like 0,0,NORTH"/>
+      <button id="execute">Execute</button>
+    </div>
+    <div class="output">
+      <h2>Output</h2>
+      <div id="output-text"></div>
+    </div>
+  </div>
+  <%#= javascript_include_tag 'simulator' %>
+</body>
+</html>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const commandInput = document.getElementById("command");
+  const executeButton = document.getElementById("execute");
+  const outputText = document.getElementById("output-text");
+  const location = document.getElementById("location");
+
+  executeButton.addEventListener("click", () => {
+    const command = commandInput.value;
+
+    fetch("/robots/" + location.value, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+        "Accept": "application/json",
+      },
+      body: JSON.stringify({
+        command: command
+    }),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        outputText.innerHTML = data;
+      });
+  });
+});
+</script>
